@@ -1,0 +1,3 @@
+name: cifar
+_target_: datasets.cifar.load_data
+

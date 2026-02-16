@@ -1,0 +1,3 @@
+name: resnet
+_target_: models.resnet.load_model
+

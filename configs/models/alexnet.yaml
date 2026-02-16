@@ -1,0 +1,3 @@
+name: alexnet
+_target_: models.alexnet.load_model
+
