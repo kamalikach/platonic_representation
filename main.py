@@ -9,7 +9,7 @@ from wrapper import ModelWrapper
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def main(cfg: DictConfig):
 
-    data = instantiate(cfg.dataset)
+    data = instantiate(cfg.data)
     model_a = ModelWrapper(instantiate(cfg.model_a))
     model_b = ModelWrapper(instantiate(cfg.model_b))
 
