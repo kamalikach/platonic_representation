@@ -1,31 +1,26 @@
-import random
-import torch
+import hydra
+from omegaconf import DictConfig
+from hydra.utils import instantiate
+from hydra import compose, initialize
 
-def sample_patches(model_a, model_b, data, k):
-    n = len(data)
+from sampler import sample_patches
+from wrapper import ModelWrapper
 
-    rows = random.sample(range(n), k)
-    cols = random.sample(range(n), k)
+@hydra.main(version_base=None, config_path="configs", config_name="config")
+def main(cfg: DictConfig):
 
-    return return_patches(model_a, model_b, data, rows, cols)
+    data = instantiate(cfg.dataset)
+    model_a = ModelWrapper(instantiate(cfg.model_a))
+    model_b = ModelWrapper(instantiate(cfg.model_b))
 
-def sample_square(model_a, model_b, data, k):
-    n = len(data)
+    print(model_a)
+    print(model_b)
+    print(data)
 
-    idx = random.sample(range(n), k)
-    return return_patches(model_a, model_b, data, idx, idx)
+    a_list, b_list = sample_patches(model_a, model_b, data, cfg.k)
 
+    print("Done!")
+    print(a_list[:5])
 
-def return_patches(model_a, model_b, data, rows, cols):
-    emb_a_rows = [model_a(data[i]).flatten() for i in rows]
-    emb_a_cols = [model_a(data[j]).flatten() for j in cols]
-
-    emb_b_rows = [model_b(data[i]).flatten() for i in rows]
-    emb_b_cols = [model_b(data[j]).flatten() for j in cols]
-
-    a_list = [torch.dot(x, y) for x in emb_a_rows for y in emb_a_cols]
-    b_list = [torch.dot(x, y) for x in emb_b_rows for y in emb_b_cols]
-
-    return a_list, b_list
-
-
+if __name__ == "__main__":
+    main()
