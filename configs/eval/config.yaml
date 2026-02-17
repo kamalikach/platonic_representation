@@ -3,6 +3,7 @@ defaults:
   - model@model_b: alexnet
   - data: cifar
 
-k: 10
+k: 35
+
 
 

@@ -9,7 +9,7 @@ from wrapper import ModelWrapper
 
 from datetime import datetime
 
-@hydra.main(version_base=None, config_path="configs", config_name="config")
+@hydra.main(version_base=None, config_path="configs/eval/", config_name="config")
 def main(cfg: DictConfig):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
