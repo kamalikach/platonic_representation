@@ -1,0 +1,3 @@
+name: mnist
+_target_: data.mnist.load_data
+
