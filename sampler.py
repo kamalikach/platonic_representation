@@ -17,11 +17,11 @@ def sample_square(model_a, model_b, data, k):
 
 
 def return_patches(model_a, model_b, data, rows, cols):
-    emb_a_rows = [model_a(data[i]).flatten() for i in rows]
-    emb_a_cols = [model_a(data[j]).flatten() for j in cols]
+    emb_a_rows = [model_a.embed(data[i]) for i in rows]
+    emb_a_cols = [model_a.embed(data[j]) for j in cols]
 
-    emb_b_rows = [model_b(data[i]).flatten() for i in rows]
-    emb_b_cols = [model_b(data[j]).flatten() for j in cols]
+    emb_b_rows = [model_b.embed(data[i]) for i in rows]
+    emb_b_cols = [model_b.embed(data[j]) for j in cols]
 
     a_list = [torch.dot(x, y) for x in emb_a_rows for y in emb_a_cols]
     b_list = [torch.dot(x, y) for x in emb_b_rows for y in emb_b_cols]

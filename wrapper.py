@@ -5,5 +5,8 @@ class ModelWrapper:
         self.model = model.eval()
 
     def embed(self, x):
+        if x.dim() == 3:
+            x = x.unsqueeze(0)
         with torch.no_grad():
-            return self.model(x).flatten()
+            out = self.model(x)
+        return out.squeeze(0).flatten()
