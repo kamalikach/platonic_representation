@@ -1,7 +1,8 @@
 import random
 import torch
 
-def sample_patches(model_a, model_b, data, k, device="cpu"):
+def sample_patches(model_a, model_b, data, k, device="cpu", seed=0):
+    random.seed(seed)
     n = len(data)
 
     rows = random.sample(range(n), k)
