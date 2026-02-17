@@ -1,4 +1,5 @@
 import hydra
+import torch
 from omegaconf import DictConfig
 from hydra.utils import instantiate
 from hydra import compose, initialize
@@ -10,16 +11,18 @@ from datetime import datetime
 
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def main(cfg: DictConfig):
-
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
+    
     data = instantiate(cfg.data)
-    model_a = ModelWrapper(instantiate(cfg.model_a))
-    model_b = ModelWrapper(instantiate(cfg.model_b))
+    model_a = ModelWrapper(instantiate(cfg.model_a).to(device))
+    model_b = ModelWrapper(instantiate(cfg.model_b).to(device))
 
     print(model_a)
     print(model_b)
     print(data)
 
-    a_list, b_list = sample_patches(model_a, model_b, data, cfg.k)
+    a_list, b_list = sample_patches(model_a, model_b, data, cfg.k, device)
 
     print("Done!")
     print(a_list[:5])
