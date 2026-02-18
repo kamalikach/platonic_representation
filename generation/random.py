@@ -1,9 +1,12 @@
-import base
+from .base import DataGenerator
 import torch
 import os
 
 class RandomGenerator(DataGenerator):
-    def generate(self, cfg):
+    def __init__(self, cfg):
+        self.cfg = cfg
+
+    def generate(self):
         #cfg.N = number of data points
         #cfg.C, cfg.H, cfg.W = each data point is C x H X W
         #cfg.output_dir = path where to save the data
