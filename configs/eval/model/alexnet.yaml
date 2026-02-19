@@ -1,3 +1,9 @@
-name: alexnet
-_target_: model.alexnet.load_model
-
+model:
+  name: alexnet
+  _target_: model.alexnet.load_model
+H: 224
+W: 224
+C: 3
+transform:
+  _target_: torchvision.transforms.Resize
+  size: [224, 224]

@@ -1,3 +1,7 @@
-name: resnet
-_target_: model.resnet.load_model
+model:
+  name: resnet
+  _target_: model.resnet.load_model
 
+transform:
+  _target_: torchvision.transforms.Resize
+  size: [224, 224]

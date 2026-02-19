@@ -13,16 +13,24 @@ from datetime import datetime
 def main(cfg: DictConfig):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
-    
+
     data = instantiate(cfg.data)
-    model_a = ModelWrapper(instantiate(cfg.model_a).to(device))
-    model_b = ModelWrapper(instantiate(cfg.model_b).to(device))
+    model_a = ModelWrapper(instantiate(cfg.model_a.model).to(device))
+    model_b = ModelWrapper(instantiate(cfg.model_b.model).to(device))
+
+    # Instantiate transforms if they exist in config
+    transform_a = instantiate(cfg.model_a.transform) if "transform" in cfg.model_a else None
+    transform_b = instantiate(cfg.model_b.transform) if "transform" in cfg.model_b else None
 
     print(model_a)
     print(model_b)
     print(data)
+    print(f"Transform A: {transform_a}")
+    print(f"Transform B: {transform_b}")
 
-    a_list, b_list = sample_patches(model_a, model_b, data, cfg.k, device)
+    a_list, b_list = sample_patches(model_a, model_b, data, cfg.k, device,
+                                     transform_a=transform_a,
+                                     transform_b=transform_b)
 
     print("Done!")
     print(a_list[:5])
