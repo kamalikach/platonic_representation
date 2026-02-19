@@ -11,12 +11,12 @@ class RandomGenerator(DataGenerator):
         #cfg.C, cfg.H, cfg.W = each data point is C x H X W
         #cfg.output_dir = path where to save the data
 
-        seed = cfg.get("seed", 0)
+        seed = self.cfg.get("seed", 0)
         torch.manual_seed(seed)
 
-        ds = torch.rand(cfg.N, cfg.C, cfg.H, cfg.W)
-        os.makedirs(os.path.dirname(cfg.output_dir), exist_ok=True)
-        torch.save(ds, cfg.output_dir)
+        ds = torch.rand(self.cfg.N, self.cfg.C, self.cfg.H, self.cfg.W)
+        os.makedirs(os.path.dirname(self.cfg.output_dir), exist_ok=True)
+        torch.save(ds, self.cfg.output_dir)
         return ds
 
 

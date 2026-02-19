@@ -1,6 +1,7 @@
 from .utils import TensorDataset
 
-def load_data(path, **kwargs):
-    return TensorDataset(path)
+def load_data(**kwargs):
+    return TensorDataset(kwargs['path'])
+
 
 

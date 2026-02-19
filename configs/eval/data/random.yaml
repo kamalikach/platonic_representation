@@ -1,0 +1,5 @@
+name: random_cifar
+path: /home/kamalika/platonic_representation/generated_datasets/random.pt
+_target_: data.tensor.load_data
+
+
