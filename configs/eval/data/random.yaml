@@ -1,5 +1,3 @@
 name: random_cifar
-path: /home/kamalika/platonic_representation/generated_datasets/random.pt
+path: /home/kamalika/platonic_representation/generated_datasets/random_32_32.pt
 _target_: data.tensor.load_data
-
-

@@ -36,7 +36,7 @@ def main(cfg: DictConfig):
     print(a_list[:5])
 
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_fname = "./outputs/" + f"{cfg.data.name}_{cfg.model_a.name}_{cfg.model_b.name}_{cfg.k}_{timestamp}" + ".txt"
+    output_fname = "./outputs/" + f"{cfg.data.name}_{cfg.model_a.model.name}_{cfg.model_b.model.name}_{cfg.k}_{timestamp}" + ".txt"
     print(output_fname)
     with open(output_fname, "w") as f:
         for x, y in zip(a_list, b_list):
