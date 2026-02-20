@@ -1,0 +1,6 @@
+defaults:
+  - _self_
+
+generator: null
+output_dir: null
+N: 100

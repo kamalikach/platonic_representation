@@ -1,4 +1,20 @@
-generator: adversarial_cifar
+generator: adversarial
 output_dir: generated_datasets/adv_cifar_16.pt
 N: 100
-epsilon: 0.06274  # 16 / 255
+
+attack:
+  method: pgd
+  epsilon: 0.06274  # 16 / 255
+  pgd_steps: 5
+
+dataset:
+  _target_: torchvision.datasets.CIFAR10
+  root: ./datasets
+  train: false
+  download: true
+
+model:
+  _target_: torch.hub.load
+  repo_or_dir: chenyaofo/pytorch-cifar-models
+  model: cifar10_resnet20
+  pretrained: true

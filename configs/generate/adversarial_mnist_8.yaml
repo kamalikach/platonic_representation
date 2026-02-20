@@ -1,0 +1,22 @@
+generator: adversarial
+output_dir: generated_datasets/adv_mnist_8.pt
+N: 100
+
+attack:
+  method: pgd
+  epsilon: 0.03137  # 8 / 255
+  pgd_steps: 5
+
+dataset:
+  _target_: torchvision.datasets.MNIST
+  root: ./datasets
+  train: false
+  download: true
+
+# Replace with your own MNIST-compatible model.
+# The model must accept 1-channel 28x28 inputs and output 10 logits.
+model:
+  _target_: torch.hub.load
+  repo_or_dir: TODO
+  model: TODO
+  pretrained: true

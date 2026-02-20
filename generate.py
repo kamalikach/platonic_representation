@@ -1,40 +1,33 @@
-import sys
-import torch
-from omegaconf import OmegaConf
+import hydra
+from hydra.utils import instantiate
+from omegaconf import DictConfig
+import torchvision.transforms as transforms
+
 from generation.random import RandomGenerator
-from generation.adversarial_cifar import AdversarialCIFARGenerator
+from generation.adversarial import AdversarialImageGenerator
 
-GENERATORS = {
-    "random": RandomGenerator,
-    "adversarial_cifar": AdversarialCIFARGenerator,
-}
 
-def build_generator(cfg):
+def build_generator(cfg: DictConfig):
     name = cfg.generator
-    if name not in GENERATORS:
-        raise ValueError(f"Unknown generator '{name}'. Choose from: {list(GENERATORS.keys())}")
 
-    if name == "adversarial_cifar":
-        model = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_resnet20", pretrained=True)
-        return AdversarialCIFARGenerator(cfg, model)
+    if name == "random":
+        return RandomGenerator(cfg)
 
-    return GENERATORS[name](cfg)
+    if name == "adversarial":
+        transform = transforms.Compose([transforms.ToTensor()])
+        dataset = instantiate(cfg.dataset, transform=transform)
+        model = instantiate(cfg.model)
+        return AdversarialImageGenerator(cfg, model, dataset)
+
+    raise ValueError(f"Unknown generator '{name}'. Choose from: random, adversarial")
 
 
-def main(cfg_name):
-    cfg_path = f"configs/generate/{cfg_name}.yaml"
-    cfg = OmegaConf.load(cfg_path)
-
+@hydra.main(config_path="configs/generate", config_name="config", version_base=None)
+def main(cfg: DictConfig):
     generator = build_generator(cfg)
     ds = generator.generate()
     print(f"Generated dataset of shape: {ds.shape}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python generate.py <config_name>")
-        print("Available configs: random, adversarial_cifar")
-        sys.exit(1)
-
-    main(sys.argv[1])
-
+    main()

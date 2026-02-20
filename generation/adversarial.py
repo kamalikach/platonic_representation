@@ -1,19 +1,17 @@
-# generation/adversarial_cifar.py
 from .base import DataGenerator
 import torch
 import torch.nn as nn
-import torchvision
-import torchvision.transforms as transforms
 import os
 
 
-class AdversarialCIFARGenerator(DataGenerator):
-    def __init__(self, cfg, model):
+class AdversarialImageGenerator(DataGenerator):
+    def __init__(self, cfg, model, dataset):
         self.cfg = cfg
         self.model = model
-        self.epsilon = cfg.get("epsilon", 8 / 255)
-        self.method = cfg.get("method", "pgd")
-        self.pgd_steps = cfg.get("pgd_steps", 5)
+        self.dataset = dataset
+        self.epsilon = cfg.attack.get("epsilon", 8 / 255)
+        self.method = cfg.attack.get("method", "pgd")
+        self.pgd_steps = cfg.attack.get("pgd_steps", 5)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
         self.model.eval()
@@ -52,18 +50,10 @@ class AdversarialCIFARGenerator(DataGenerator):
         return adversarial
 
     def generate(self):
-        transform = transforms.Compose([
-            transforms.ToTensor(),
-        ])
-
-        test_set = torchvision.datasets.CIFAR10(
-            root='./datasets', train=False, download=True, transform=transform
-        )
-
         N = self.cfg.N
-        images, labels = zip(*[test_set[i] for i in range(N)])
-        images = torch.stack(images)   # (N, 3, 32, 32)
-        labels = torch.tensor(labels)  # (N,)
+        images, labels = zip(*[self.dataset[i] for i in range(N)])
+        images = torch.stack(images)
+        labels = torch.tensor(labels)
 
         if self.method == "fgsm":
             adversarial_images = self._fgsm(images, labels)
