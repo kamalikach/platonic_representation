@@ -1,0 +1,4 @@
+generator: adversarial_cifar
+output_dir: generated_datasets/adv_cifar_4.pt
+N: 100
+epsilon: 0.01569  # 4 / 255
