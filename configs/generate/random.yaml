@@ -1,0 +1,8 @@
+generator: random
+output_dir: generated_datasets/random_32_32.pt
+N: 100
+C: 3
+H: 32
+W: 32
+seed: 0
+
