@@ -1,22 +1,40 @@
-from generation.random import RandomGenerator
+import sys
+import torch
 from omegaconf import OmegaConf
+from generation.random import RandomGenerator
+from generation.adversarial_cifar import AdversarialCIFARGenerator
 
-cfg_dict = {
-    'output_dir': 'generated_datasets/random_32_32.pt',
-    'N': 100,
-    'C': 3,
-    'H': 32,
-    'W': 32,
-    'seed': 0
+GENERATORS = {
+    "random": RandomGenerator,
+    "adversarial_cifar": AdversarialCIFARGenerator,
 }
 
+def build_generator(cfg):
+    name = cfg.generator
+    if name not in GENERATORS:
+        raise ValueError(f"Unknown generator '{name}'. Choose from: {list(GENERATORS.keys())}")
 
-def main(cfg):
-    cfg = OmegaConf.create(cfg_dict)
-    generator = RandomGenerator(cfg)
+    if name == "adversarial_cifar":
+        model = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_resnet20", pretrained=True)
+        return AdversarialCIFARGenerator(cfg, model)
+
+    return GENERATORS[name](cfg)
+
+
+def main(cfg_name):
+    cfg_path = f"configs/generate/{cfg_name}.yaml"
+    cfg = OmegaConf.load(cfg_path)
+
+    generator = build_generator(cfg)
     ds = generator.generate()
-    print(ds)
+    print(f"Generated dataset of shape: {ds.shape}")
 
 
-if __name__ == '__main__':
-    main(cfg_dict)
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python generate.py <config_name>")
+        print("Available configs: random, adversarial_cifar")
+        sys.exit(1)
+
+    main(sys.argv[1])
+
