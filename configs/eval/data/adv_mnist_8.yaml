@@ -1,0 +1,3 @@
+name: adv_mnist_8
+path: /home/kamalika/platonic_representation/generated_datasets/adv_mnist_8.pt
+_target_: data.tensor.load_data

@@ -1,0 +1,3 @@
+name: perturb_mnist_4
+path: /home/kamalika/platonic_representation/generated_datasets/perturb_mnist_4.pt
+_target_: data.tensor.load_data
