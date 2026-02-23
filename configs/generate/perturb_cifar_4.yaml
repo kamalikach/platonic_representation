@@ -1,0 +1,10 @@
+generator: perturb
+output_dir: generated_datasets/perturb_cifar_4.pt
+N: 100
+epsilon: 0.01569  # 4 / 255
+
+dataset:
+  _target_: torchvision.datasets.CIFAR10
+  root: ./datasets
+  train: false
+  download: true

@@ -1,0 +1,18 @@
+generator: adversarial
+output_dir: generated_datasets/adv_mnist_4.pt
+N: 100
+
+attack:
+  method: pgd
+  epsilon: 0.01569  # 4 / 255
+  pgd_steps: 5
+
+dataset:
+  _target_: torchvision.datasets.MNIST
+  root: ./datasets
+  train: false
+  download: true
+
+model:
+  _target_: model.mnist.load_model
+  pretrained: true
