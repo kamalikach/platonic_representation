@@ -5,6 +5,7 @@ import torchvision.transforms as transforms
 
 from generation.random import RandomGenerator
 from generation.adversarial import AdversarialImageGenerator
+from generation.perturb import PerturbGenerator
 
 
 def build_generator(cfg: DictConfig):
@@ -19,7 +20,12 @@ def build_generator(cfg: DictConfig):
         model = instantiate(cfg.model)
         return AdversarialImageGenerator(cfg, model, dataset)
 
-    raise ValueError(f"Unknown generator '{name}'. Choose from: random, adversarial")
+    if name == "perturb":
+        transform = transforms.Compose([transforms.ToTensor()])
+        dataset = instantiate(cfg.dataset, transform=transform)
+        return PerturbGenerator(cfg, dataset)
+
+    raise ValueError(f"Unknown generator '{name}'. Choose from: random, adversarial, perturb")
 
 
 @hydra.main(config_path="configs/generate", config_name="config", version_base=None)
