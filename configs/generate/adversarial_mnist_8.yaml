@@ -13,10 +13,6 @@ dataset:
   train: false
   download: true
 
-# Replace with your own MNIST-compatible model.
-# The model must accept 1-channel 28x28 inputs and output 10 logits.
 model:
-  _target_: torch.hub.load
-  repo_or_dir: TODO
-  model: TODO
+  _target_: model.mnist.load_model
   pretrained: true
